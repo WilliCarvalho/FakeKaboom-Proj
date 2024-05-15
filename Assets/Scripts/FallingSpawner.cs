@@ -15,8 +15,9 @@ public class FallingSpawner : MonoBehaviour
 
     private IEnumerator SpawnObject()
     {
-        while (true)
+        while (GameManager.Instance.GetIsGameOver() == false)
         {
+            
             float randomXPosition = Random.Range(minSpawnPositionX, maxSpawnPositionX);
             Vector2 spawnPosition = new Vector2(randomXPosition, transform.position.y);
 

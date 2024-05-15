@@ -15,8 +15,13 @@ public class PlayerBehavior : MonoBehaviour
 
     private void Update()
     {
+        if (GameManager.Instance.GetIsGameOver() == true)
+        {
+            return;
+        }
+
         float inputMoveX = Input.GetAxisRaw("Horizontal") * Time.deltaTime * moveSpeed;
-        if(inputMoveX != 0)
+        if (inputMoveX != 0)
         {
             //Está se movendo
             animator.SetBool("isMoving", true);
@@ -29,8 +34,12 @@ public class PlayerBehavior : MonoBehaviour
         transform.Translate(inputMoveX, 0, 0);
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collider)
     {
-        GameManager.Instance.DecreaseScore(scoreToDecrease);
+        bool isGameOver = GameManager.Instance.GetIsGameOver();
+        if (collider.collider.CompareTag("Collectable") && isGameOver == false)
+        {
+            GameManager.Instance.DecreaseScore(scoreToDecrease);
+        }
     }
 }
