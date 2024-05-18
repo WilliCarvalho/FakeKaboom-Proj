@@ -6,6 +6,13 @@ public class BasketBehavior : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        GameManager.Instance.IncreaseScore(scoreToAdd);
+        if (collision.gameObject.CompareTag("Collectable"))
+        {
+            GameManager.Instance.IncreaseScore(scoreToAdd);
+        }
+        else if (collision.gameObject.CompareTag("Hearth"))
+        {
+            GameManager.Instance.IncreaseLifeByOne();
+        }
     }
 }

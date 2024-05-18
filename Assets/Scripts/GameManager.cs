@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -7,10 +8,13 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [SerializeField] private FallingSpawner spawner;
 
     [Header("Game loop variables")]
     [SerializeField] private int lives;
-    private int score;
+    [SerializeField] private int increaseLifeByScoreRate = 500;
+    private int targetScore;
+    public int score;
     private bool isGameOver;
 
     [Header("Text variables")]
@@ -26,9 +30,17 @@ public class GameManager : MonoBehaviour
     {
         Instance = this;
 
+        targetScore = increaseLifeByScoreRate;
+
         isGameOver = false;
         gameOverPanel.SetActive(false);
         restartButton.onClick.AddListener(Restart);
+        UpdateLivesText(lives);
+    }
+
+    public void IncreaseLifeByOne()
+    {
+        lives++;
         UpdateLivesText(lives);
     }
 
@@ -36,7 +48,22 @@ public class GameManager : MonoBehaviour
     {
         score += amount;
         UpdateScoreText(score);
-        print("Sua pontuação atual é de: " + score);
+        CheckScore();
+    }
+
+    private void CheckScore()
+    {
+        if(score >= 1000)
+        {
+            spawner.ChangeSpawnRate(1);
+        }
+        
+        if(score >= targetScore)
+        {
+            lives++;
+            UpdateLivesText(lives);
+            targetScore += increaseLifeByScoreRate;
+        }
     }
 
     public void DecreaseScore(int amount)
@@ -87,8 +114,13 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("Gameplay");
     }
 
+    public int GetScore() 
+    {
+        return score; 
+    }
+
     public bool GetIsGameOver()
     {
         return isGameOver;
-    }
+    }    
 }
